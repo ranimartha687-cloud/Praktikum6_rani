@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup Node.js (untuk unit test JS)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then npm install; fi
+
+      # Run unit tests
+      - name: Run unit tests
+        run: |
+          if [ -f package.json ]; then npm test; fi
+
+      # Deploy otomatis (contoh: copy ke server via scp)
+      - name: Deploy to server
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Deploy step - tambahkan script server di sini"
